@@ -1,0 +1,251 @@
+name: Playwright Dispatch - Sharded
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment name (e.g. dev, qa)
+        required: true
+        type: string
+      env_secret_name:
+        description: Repository secret name containing env file content (e.g. ENV_DEV)
+        required: true
+        type: string
+      runner_args_json:
+        description: JSON array of runner args, e.g. ["--grep","@smoke"]
+        required: false
+        default: '[]'
+        type: string
+      shard_total:
+        description: Number of CI shards to run (1 = no sharding)
+        required: false
+        default: '1'
+        type: string
+
+concurrency:
+  group: playwright-dispatch-${{ inputs.environment }}
+  cancel-in-progress: true
+
+jobs:
+  prepare-shards:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.shards.outputs.matrix }}
+      shard_total: ${{ steps.shards.outputs.total }}
+    steps:
+      - name: Build matrix
+        id: shards
+        env:
+          INPUT_SHARD_TOTAL: ${{ inputs.shard_total }}
+        run: |
+          node <<'NODE' >> "$GITHUB_OUTPUT"
+          const raw = String(process.env.INPUT_SHARD_TOTAL || '1').trim();
+          const parsed = Number.parseInt(raw, 10);
+          const total = Number.isInteger(parsed) && parsed > 0 ? parsed : 1;
+          const include = Array.from({ length: total }, (_, index) => ({
+            shard_index: index + 1,
+            shard_total: total,
+          }));
+          console.log(`total=${total}`);
+          console.log(`matrix=${JSON.stringify({ include })}`);
+          NODE
+
+  run-tests:
+    needs: prepare-shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.prepare-shards.outputs.matrix) }}
+    env:
+      TARGET_ENV: ${{ inputs.environment }}
+      RUNNER_ARGS_JSON: ${{ inputs.runner_args_json }}
+      CI_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
+      SHARD_INDEX: ${{ matrix.shard_index }}
+      SHARD_TOTAL: ${{ matrix.shard_total }}
+      PW_SHARD_CURRENT: ${{ matrix.shard_index }}
+      PW_SHARD_TOTAL: ${{ matrix.shard_total }}
+      PLAYWRIGHT_SHARD: ${{ matrix.shard_index }}/${{ matrix.shard_total }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Playwright CI
+        uses: ./.github/actions/setup-playwright-ci
+        with:
+          env_file_content: ${{ secrets[inputs.env_secret_name] }}
+          target_env: ${{ inputs.environment }}
+          browsers_path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          playwright_install_command: corepack yarn playwright install
+
+      - name: Run test runner
+        uses: ./.github/actions/run-playwright-dispatch
+        with:
+          target_env: ${{ inputs.environment }}
+          runner_args_json: ${{ inputs.runner_args_json }}
+          shard_index: ${{ matrix.shard_index }}
+          shard_total: ${{ matrix.shard_total }}
+
+      - name: Resolve build directory
+        if: always()
+        id: build-dir
+        uses: ./.github/actions/resolve-build-dir
+
+      - name: Upload shard artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-${{ inputs.environment }}-${{ github.run_number }}-shard-${{ matrix.shard_index }}
+          path: ${{ steps.build-dir.outputs.dir }}
+          if-no-files-found: warn
+
+  merge-reports:
+    if: ${{ always() && needs.prepare-shards.result == 'success' && needs.run-tests.result != 'skipped' && needs.run-tests.result != 'cancelled' }}
+    needs:
+      - prepare-shards
+      - run-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
+      CI_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      PLAYWRIGHT_REPORT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Playwright CI
+        uses: ./.github/actions/setup-playwright-ci
+        with:
+          env_file_content: ${{ secrets[inputs.env_secret_name] }}
+          target_env: ${{ inputs.environment }}
+          browsers_path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          playwright_install_command: corepack yarn playwright install chromium
+
+      - name: Download shard artifacts
+        if: needs.run-tests.result != 'skipped'
+        uses: actions/download-artifact@v8
+        with:
+          pattern: playwright-${{ inputs.environment }}-${{ github.run_number }}-shard-*
+          path: shard-artifacts
+
+      - name: Resolve build directory
+        if: needs.run-tests.result != 'skipped'
+        id: build-dir
+        uses: ./.github/actions/resolve-build-dir
+
+      - name: Merge blob reports
+        if: needs.run-tests.result != 'skipped'
+        env:
+          EXPECTED_SHARDS: ${{ needs.prepare-shards.outputs.shard_total }}
+          BUILD_DIR: ${{ steps.build-dir.outputs.dir }}
+          ENV: ${{ inputs.environment }}
+          # Slack message layout only shows the CI report link when this is set
+          # (otherwise it falls back to a local file path, which is meaningless in CI).
+          PLAYWRIGHT_REPORT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$BUILD_DIR/blob-report/all"
+          mkdir -p "$BUILD_DIR/shard-reports"
+
+          if [ -d shard-artifacts ]; then
+            # Merge individual shard reports into a single reports directory (flatten structure for Windows paths)
+            for shard_dir in shard-artifacts/playwright-*-shard-*/; do
+              if [ -d "$shard_dir" ]; then
+                SHARD_NAME=$(basename "$shard_dir" | sed 's/-$//')
+
+                REPORT_ROOT="$shard_dir"
+                if [ -d "$shard_dir/build" ]; then
+                  REPORT_ROOT="$shard_dir/build"
+                fi
+
+                # Combine raw artifacts from ALL shards into a single build/artifacts directory.
+                # This is required so the quality-report merge helper (utils/mergeQualityReports.ts)
+                # can find every shard's per-URL JSON/MD files together (e.g. artifacts/accessibility/*.json)
+                # and generate one aggregated report + PDF per category, instead of per-shard subfolders.
+                if [ -d "$REPORT_ROOT/artifacts" ]; then
+                  mkdir -p "$BUILD_DIR/artifacts"
+                  cp -r "$REPORT_ROOT/artifacts/." "$BUILD_DIR/artifacts/" 2>/dev/null || true
+                fi
+
+                # Combine session files from ALL shards into a single build/sessions directory.
+                if [ -d "$REPORT_ROOT/sessions" ]; then
+                  mkdir -p "$BUILD_DIR/sessions"
+                  cp -r "$REPORT_ROOT/sessions/." "$BUILD_DIR/sessions/" 2>/dev/null || true
+                fi
+
+                # Copy HTML reports
+                if [ -d "$REPORT_ROOT/html-report" ]; then
+                  mkdir -p "$BUILD_DIR/shard-reports/html"
+                  cp -r "$REPORT_ROOT/html-report/"* "$BUILD_DIR/shard-reports/html/" 2>/dev/null || true
+                fi
+                # Copy JSON reports
+                if [ -f "$REPORT_ROOT/json/results.json" ]; then
+                  mkdir -p "$BUILD_DIR/shard-reports/json"
+                  cp "$REPORT_ROOT/json/results.json" "$BUILD_DIR/shard-reports/json/${SHARD_NAME}.json"
+                fi
+                # Copy JUnit reports
+                if [ -f "$REPORT_ROOT/junit/results.xml" ]; then
+                  mkdir -p "$BUILD_DIR/shard-reports/junit"
+                  cp "$REPORT_ROOT/junit/results.xml" "$BUILD_DIR/shard-reports/junit/${SHARD_NAME}.xml"
+                fi
+              fi
+            done
+          fi
+
+          # Collect blob reports for merge
+          found=0
+          while IFS= read -r file; do
+            found=$((found + 1))
+            cp "$file" "$BUILD_DIR/blob-report/all/$(printf '%03d' "$found")-$(basename "$file")"
+          done < <(find shard-artifacts -type f -path '*/blob-report/*.zip' | sort)
+
+          if [ "$found" -eq 0 ]; then
+            echo '::warning::No blob reports were found. Skipping playwright merge-reports.'
+            exit 0
+          fi
+
+          if [ "$found" -lt "${EXPECTED_SHARDS:-1}" ]; then
+            echo "::warning::Found $found blob report(s), expected ${EXPECTED_SHARDS:-1}. Merged report may be partial."
+          fi
+
+          corepack yarn playwright merge-reports --config playwright.sharding.config.ts "$BUILD_DIR/blob-report/all"
+
+      - name: Merge quality reports (accessibility, CSP, etc.) and generate PDFs
+        if: needs.run-tests.result != 'skipped'
+        env:
+          ENV: ${{ inputs.environment }}
+          # ts-node (transpile-only) validates tsconfig.json even without type-checking;
+          # TS6 requires an explicit rootDir it otherwise can't infer for single-file compiles.
+          # Override just for this ts-node invocation, without touching the shared tsconfig.json.
+          TS_NODE_COMPILER_OPTIONS: '{"rootDir":"."}'
+        run: |
+          set -euo pipefail
+          corepack yarn node \
+            -r ts-node/register/transpile-only \
+            -r tsconfig-paths/register \
+            -e "require('./utils/mergeQualityReports').default().catch((error) => { console.error(error); process.exit(1); });"
+
+      - name: Upload merged artifacts
+        if: always() && needs.run-tests.result != 'skipped'
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-${{ inputs.environment }}-${{ github.run_number }}-merged
+          path: ${{ steps.build-dir.outputs.dir }}
+          if-no-files-found: warn
+
+  send-reports:
+    if: ${{ always() && needs.merge-reports.result == 'success' }}
+    needs:
+      - merge-reports
+      - run-tests
+    uses: ./.github/workflows/playwright-send-reports.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: playwright-${{ inputs.environment }}-${{ github.run_number }}-merged
+      ci_run_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

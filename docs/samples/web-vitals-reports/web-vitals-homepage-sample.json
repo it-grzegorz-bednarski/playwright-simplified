@@ -1,0 +1,54 @@
+{
+  "startedAt": "2026-06-16T09:05:10.000Z",
+  "env": "dev",
+  "allPassed": true,
+  "results": [
+    {
+      "name": "homePage-sample",
+      "url": "https://example.com/",
+      "deviceName": "desktop",
+      "interactionActionUsed": "flipBothCheckboxes",
+      "allPassed": true,
+      "metrics": [
+        {
+          "metric": "LCP",
+          "value": 2200,
+          "unit": "ms",
+          "rating": "good",
+          "threshold": 2500,
+          "passed": true
+        },
+        {
+          "metric": "CLS",
+          "value": 0.04,
+          "unit": "score",
+          "rating": "good",
+          "threshold": 0.1,
+          "passed": true
+        },
+        {
+          "metric": "INP",
+          "value": 190,
+          "unit": "ms",
+          "rating": "good",
+          "threshold": 200,
+          "passed": true
+        },
+        {
+          "metric": "FCP",
+          "value": 1700,
+          "unit": "ms",
+          "rating": "good"
+        },
+        {
+          "metric": "TTFB",
+          "value": 640,
+          "unit": "ms",
+          "rating": "good",
+          "threshold": 800,
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

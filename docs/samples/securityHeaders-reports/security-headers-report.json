@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-02-15T11:43:56.797Z",
+  "results": [
+    {
+      "url": "https://the-internet.herokuapp.com/",
+      "okCount": 2,
+      "missingCount": 4,
+      "forbiddenPresentCount": 1,
+      "missingHeaders": [
+        "referrer-policy",
+        "permissions-policy",
+        "strict-transport-security",
+        "content-security-policy"
+      ],
+      "forbiddenPresentHeaders": ["server"]
+    },
+    {
+      "url": "https://the-internet.herokuapp.com/floating_menu",
+      "okCount": 2,
+      "missingCount": 2,
+      "forbiddenPresentCount": 1,
+      "missingHeaders": ["referrer-policy", "permissions-policy"],
+      "forbiddenPresentHeaders": ["server"]
+    },
+    {
+      "url": "https://the-internet.herokuapp.com/large",
+      "okCount": 2,
+      "missingCount": 2,
+      "forbiddenPresentCount": 1,
+      "missingHeaders": ["referrer-policy", "permissions-policy"],
+      "forbiddenPresentHeaders": ["server"]
+    }
+  ],
+  "summary": {
+    "pages": 3,
+    "okPages": 0,
+    "pagesWithIssues": 3
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "TEST_COOKIE_B": {
+    "name": "cookie_b",
+    "value": "true",
+    "domain": ".the-internet.herokuapp.com",
+    "path": "/",
+    "httpOnly": false,
+    "secure": false
+  }
+}

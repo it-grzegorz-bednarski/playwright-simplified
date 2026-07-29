@@ -1,0 +1,31 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cache
+.cache/
+.eslintcache
+
+# Package manager
+node_modules/
+
+# Playwright build output (artifacts, reports, test results)
+# "build" matches buildDir in playwright.config.ts — update both if renamed
+build/
+
+# Environment files (secrets)
+env/*
+!env/.env.example
+
+# Yarn
+.yarn/*
+!.yarn/patches/
+!.yarn/plugins/
+!.yarn/releases/
+!.yarn/sdks/
+!.yarn/versions/

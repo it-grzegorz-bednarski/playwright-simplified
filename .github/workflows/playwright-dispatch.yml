@@ -1,0 +1,76 @@
+name: Playwright Dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment name (e.g. dev, stage)
+        required: true
+        type: string
+      env_secret_name:
+        description: Repository secret name containing env file content (e.g. ENV_DEV)
+        required: true
+        type: string
+      runner_args_json:
+        description: JSON array of runner args, e.g. ["--grep","@smoke"]
+        required: false
+        default: '[]'
+        type: string
+
+concurrency:
+  group: playwright-dispatch-${{ inputs.environment }}
+  cancel-in-progress: true
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    env:
+      TARGET_ENV: ${{ inputs.environment }}
+      RUNNER_ARGS_JSON: ${{ inputs.runner_args_json }}
+      CI_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      # Slack message layout only shows the CI report link when this is set
+      # (otherwise it falls back to a local file path, which is meaningless in CI).
+      PLAYWRIGHT_REPORT_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Playwright CI
+        uses: ./.github/actions/setup-playwright-ci
+        with:
+          env_file_content: ${{ secrets[inputs.env_secret_name] }}
+          target_env: ${{ inputs.environment }}
+          browsers_path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          playwright_install_command: corepack yarn playwright install
+
+      - name: Run test runner
+        uses: ./.github/actions/run-playwright-dispatch
+        with:
+          target_env: ${{ inputs.environment }}
+          runner_args_json: ${{ inputs.runner_args_json }}
+
+      - name: Resolve build directory
+        if: always()
+        id: build-dir
+        uses: ./.github/actions/resolve-build-dir
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-${{ inputs.environment }}-${{ github.run_number }}
+          path: ${{ steps.build-dir.outputs.dir }}
+          if-no-files-found: warn
+
+  send-reports:
+    if: ${{ always() && needs.run-tests.result != 'skipped' && needs.run-tests.result != 'cancelled' }}
+    needs: run-tests
+    uses: ./.github/workflows/playwright-send-reports.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: playwright-${{ inputs.environment }}-${{ github.run_number }}
+      ci_run_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

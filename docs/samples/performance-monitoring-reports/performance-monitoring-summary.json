@@ -1,0 +1,79 @@
+{
+  "startedAt": "2026-06-15T16:00:00.000Z",
+  "finishedAt": "2026-06-15T16:45:30.000Z",
+  "env": "dev",
+  "results": [
+    {
+      "name": "homePage",
+      "url": "https://www.example.com/",
+      "device": "desktop",
+      "runs": 3,
+      "scoresPerRun": [
+        { "performance": 58.0, "accessibility": 95.0, "bestPractices": 76.0, "seo": 100.0 },
+        { "performance": 61.0, "accessibility": 95.0, "bestPractices": 76.0, "seo": 100.0 },
+        { "performance": 55.0, "accessibility": 95.0, "bestPractices": 76.0, "seo": 100.0 }
+      ],
+      "medianScores": {
+        "performance": 58.0,
+        "accessibility": 95.0,
+        "bestPractices": 76.0,
+        "seo": 100.0
+      },
+      "onlyCategories": ["performance", "accessibility", "bestPractices", "seo"]
+    },
+    {
+      "name": "homePage",
+      "url": "https://www.example.com/",
+      "device": "mobile",
+      "runs": 3,
+      "scoresPerRun": [
+        { "performance": 35.0, "accessibility": 95.0, "bestPractices": 74.0, "seo": 100.0 },
+        { "performance": 38.0, "accessibility": 95.0, "bestPractices": 74.0, "seo": 100.0 },
+        { "performance": 33.0, "accessibility": 95.0, "bestPractices": 74.0, "seo": 100.0 }
+      ],
+      "medianScores": {
+        "performance": 35.0,
+        "accessibility": 95.0,
+        "bestPractices": 74.0,
+        "seo": 100.0
+      },
+      "onlyCategories": ["performance", "accessibility", "bestPractices", "seo"]
+    },
+    {
+      "name": "largePage",
+      "url": "https://www.example.com/large",
+      "device": "desktop",
+      "runs": 3,
+      "scoresPerRun": [
+        { "performance": 57.0, "accessibility": 92.0, "bestPractices": 76.0, "seo": 91.0 },
+        { "performance": 60.0, "accessibility": 92.0, "bestPractices": 76.0, "seo": 91.0 },
+        { "performance": 54.0, "accessibility": 92.0, "bestPractices": 76.0, "seo": 91.0 }
+      ],
+      "medianScores": {
+        "performance": 57.0,
+        "accessibility": 92.0,
+        "bestPractices": 76.0,
+        "seo": 91.0
+      },
+      "onlyCategories": ["performance", "accessibility", "bestPractices", "seo"]
+    },
+    {
+      "name": "largePage",
+      "url": "https://www.example.com/large",
+      "device": "mobile",
+      "runs": 3,
+      "scoresPerRun": [
+        { "performance": 41.0, "accessibility": 92.0, "bestPractices": 74.0, "seo": 91.0 },
+        { "performance": 44.0, "accessibility": 92.0, "bestPractices": 74.0, "seo": 91.0 },
+        { "performance": 39.0, "accessibility": 92.0, "bestPractices": 74.0, "seo": 91.0 }
+      ],
+      "medianScores": {
+        "performance": 41.0,
+        "accessibility": 92.0,
+        "bestPractices": 74.0,
+        "seo": 91.0
+      },
+      "onlyCategories": ["performance", "accessibility", "bestPractices", "seo"]
+    }
+  ]
+}
