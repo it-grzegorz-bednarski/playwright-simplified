@@ -1,0 +1,24 @@
+{
+  "internalUser": "False",
+  "language": {
+    "machineTranslated": "False",
+    "requested": "en",
+    "served": "en"
+  },
+  "pageType": "landing",
+  "projectName": "Google Analytics",
+  "signedIn": "False",
+  "tenant": "developers",
+  "recommendations": {
+    "sourcePage": "",
+    "sourceType": 0,
+    "sourceRank": 0,
+    "sourceIdenticalDescriptions": 0,
+    "sourceTitleWords": 0,
+    "sourceDescriptionWords": 0,
+    "experiment": ""
+  },
+  "experiment": {
+    "ids": ""
+  }
+}

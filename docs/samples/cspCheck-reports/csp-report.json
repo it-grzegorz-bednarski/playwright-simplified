@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-02-15T13:23:09.042Z",
+  "results": [
+    {
+      "url": "https://news.ycombinator.com/",
+      "hasCsp": true,
+      "issuesCount": 2,
+      "issues": [
+        {
+          "code": "UNSAFE_INLINE",
+          "message": "CSP contains 'unsafe-inline'."
+        },
+        {
+          "code": "NONCE_OR_HASH_MISSING",
+          "message": "script-src is present but doesn't contain nonce/hash sources (heuristic)."
+        }
+      ]
+    },
+    {
+      "url": "https://the-internet.herokuapp.com/",
+      "hasCsp": false,
+      "issuesCount": 1,
+      "issues": [
+        {
+          "code": "CSP_MISSING",
+          "message": "Missing Content-Security-Policy (header or meta)."
+        }
+      ]
+    },
+    {
+      "url": "https://www.iana.org/domains/reserved",
+      "hasCsp": true,
+      "issuesCount": 3,
+      "issues": [
+        {
+          "code": "UNSAFE_INLINE",
+          "message": "CSP contains 'unsafe-inline'."
+        },
+        {
+          "code": "UNSAFE_EVAL",
+          "message": "CSP contains 'unsafe-eval'."
+        },
+        {
+          "code": "NONCE_OR_HASH_MISSING",
+          "message": "script-src is present but doesn't contain nonce/hash sources (heuristic)."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "pages": 3,
+    "pagesWithCsp": 2,
+    "pagesWithIssues": 3,
+    "totalIssues": 6
+  }
+}

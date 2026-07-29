@@ -1,0 +1,102 @@
+{
+  "startedAt": "2026-06-16T09:00:00.000Z",
+  "finishedAt": "2026-06-16T09:12:10.000Z",
+  "env": "dev",
+  "allPassed": false,
+  "results": [
+    {
+      "name": "homePage",
+      "url": "https://example.com/",
+      "deviceName": "desktop",
+      "interactionActionUsed": "flipBothCheckboxes",
+      "allPassed": true,
+      "metrics": [
+        {
+          "metric": "LCP",
+          "value": 2100,
+          "unit": "ms",
+          "rating": "good",
+          "threshold": 2500,
+          "passed": true
+        },
+        {
+          "metric": "CLS",
+          "value": 0.06,
+          "unit": "score",
+          "rating": "good",
+          "threshold": 0.1,
+          "passed": true
+        },
+        {
+          "metric": "INP",
+          "value": 185,
+          "unit": "ms",
+          "rating": "good",
+          "threshold": 200,
+          "passed": true
+        },
+        {
+          "metric": "FCP",
+          "value": 1950,
+          "unit": "ms",
+          "rating": "needs-improvement"
+        },
+        {
+          "metric": "TTFB",
+          "value": 620,
+          "unit": "ms",
+          "rating": "good",
+          "threshold": 800,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "checkoutPage",
+      "url": "https://example.com/checkout",
+      "deviceName": "mobile",
+      "interactionActionUsed": "centerClick",
+      "allPassed": false,
+      "metrics": [
+        {
+          "metric": "LCP",
+          "value": 4350,
+          "unit": "ms",
+          "rating": "poor",
+          "threshold": 2500,
+          "passed": false
+        },
+        {
+          "metric": "CLS",
+          "value": 0.11,
+          "unit": "score",
+          "rating": "needs-improvement",
+          "threshold": 0.15,
+          "passed": true
+        },
+        {
+          "metric": "INP",
+          "value": 340,
+          "unit": "ms",
+          "rating": "needs-improvement",
+          "threshold": 400,
+          "passed": true
+        },
+        {
+          "metric": "FCP",
+          "value": 2600,
+          "unit": "ms",
+          "rating": "needs-improvement"
+        },
+        {
+          "metric": "TTFB",
+          "value": 1020,
+          "unit": "ms",
+          "rating": "needs-improvement",
+          "threshold": 900,
+          "passed": false
+        }
+      ]
+    }
+  ]
+}

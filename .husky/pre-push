@@ -1,0 +1,24 @@
+#!/bin/sh
+# === Husky pre-push hook for typecheck in (mono)repo ===
+# This script runs tsc --noEmit in each defined package directory.
+# Add more package paths to the 'packages' array as needed.
+
+# Get the root directory of the repository
+root_dir=$(pwd)
+
+# List of package directories to check (add more as needed)
+# For single-repo, keep as ("./")
+# For monorepo, e.g. ("packages/app1" "packages/app2")
+packages=("./")
+
+for package in "${packages[@]}"; do
+  cd "$root_dir/$package" || exit 1
+  echo "Starting typecheck for:"
+  pwd
+  # --noEmitOnError is set via tsconfig; skip gracefully if no .ts files exist yet
+  if ! find . -name "*.ts" -not -path "*/node_modules/*" | grep -q .; then
+    echo "No .ts files found, skipping typecheck."
+    continue
+  fi
+  yarn tsc --noEmit || exit 1
+done

@@ -1,0 +1,20 @@
+#!/bin/sh
+# === Husky pre-commit hook for lint-staged in (mono)repo ===
+# This script runs lint-staged in each defined package directory.
+# Add more package paths to the 'packages' array as needed.
+
+# Get the root directory of the repository
+root_dir=$(pwd)
+
+# List of package directories to check (add more as needed)
+# For single-repo, keep as ("./")
+# For monorepo, e.g. ("packages/app1" "packages/app2")
+packages=("./")
+
+for package in "${packages[@]}"; do
+  cd "$root_dir/$package" || exit 1
+  echo "Starting lint-staged for:"
+  pwd
+  yarn lint-staged || exit 1
+done
+

@@ -1,0 +1,100 @@
+name: Run Playwright Dispatch
+description: Run the shared Playwright test runner with optional sharding support.
+
+inputs:
+  target_env:
+    description: Target environment name.
+    required: true
+  runner_args_json:
+    description: JSON array of runner arguments.
+    required: false
+    default: '[]'
+  env_file_dir:
+    description: Directory containing the generated env file.
+    required: false
+    default: env
+  shard_index:
+    description: Shard index when workflow sharding is enabled.
+    required: false
+    default: ''
+  shard_total:
+    description: Total shard count when workflow sharding is enabled.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Run test runner
+      shell: bash
+      env:
+        TARGET_ENV: ${{ inputs.target_env }}
+        RUNNER_ARGS_JSON: ${{ inputs.runner_args_json }}
+        ENV_FILE_DIR: ${{ inputs.env_file_dir }}
+        SHARD_INDEX: ${{ inputs.shard_index }}
+        SHARD_TOTAL: ${{ inputs.shard_total }}
+      run: |
+        set -euo pipefail
+        node <<'NODE'
+        const fs = require('fs');
+        const path = require('path');
+        const { parseEnv } = require('node:util');
+        const { spawnSync } = require('child_process');
+
+        const targetEnv = String(process.env.TARGET_ENV || '').trim();
+        if (!targetEnv) {
+          console.error('Missing TARGET_ENV input.');
+          process.exit(1);
+        }
+
+        let runnerArgs;
+        try {
+          const parsed = JSON.parse(process.env.RUNNER_ARGS_JSON || '[]');
+          runnerArgs = Array.isArray(parsed) ? parsed.map(value => String(value)) : [];
+        } catch (error) {
+          console.error(`Invalid RUNNER_ARGS_JSON: ${error.message}`);
+          process.exit(1);
+        }
+
+        const shardTotal = Number.parseInt(String(process.env.SHARD_TOTAL || '1'), 10);
+        const shardIndex = Number.parseInt(String(process.env.SHARD_INDEX || '1'), 10);
+        const hasExplicitShardArg = runnerArgs.some(arg => arg === '--shard' || String(arg).startsWith('--shard='));
+        if (Number.isInteger(shardTotal) && shardTotal > 1 && hasExplicitShardArg) {
+          console.error('Do not pass --shard in runner_args_json when workflow sharding is enabled. Use shard_total input only.');
+          process.exit(1);
+        }
+        if (Number.isInteger(shardTotal) && shardTotal > 1) {
+          runnerArgs.push('--shard', `${shardIndex}/${shardTotal}`);
+        }
+
+        const envFilePath = path.resolve(process.cwd(), process.env.ENV_FILE_DIR || 'env', `.env.${targetEnv}`);
+        if (!fs.existsSync(envFilePath)) {
+          console.error(`Missing env file in CI: ${envFilePath}`);
+          process.exit(1);
+        }
+
+        const envFileContent = fs.readFileSync(envFilePath, 'utf8');
+        const envMap = parseEnv(envFileContent);
+
+        const mergedEnv = {
+          ...process.env,
+          ...envMap,
+          ENV: targetEnv,
+        };
+
+        const args = ['scripts/run.cjs', targetEnv, ...runnerArgs];
+        const result = spawnSync(process.execPath, args, {
+          stdio: 'inherit',
+          env: mergedEnv,
+          shell: false,
+        });
+
+        if (result.error) {
+          console.error(result.error.message || String(result.error));
+          process.exit(1);
+        }
+
+        process.exit(typeof result.status === 'number' ? result.status : 1);
+        NODE
+
+

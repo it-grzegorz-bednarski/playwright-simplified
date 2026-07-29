@@ -1,0 +1,41 @@
+name: Resolve Build Directory
+description: Resolve the Playwright build directory from playwright.config.ts.
+
+inputs:
+  config_path:
+    description: Path to the Playwright config file.
+    required: false
+    default: playwright.config.ts
+  default_dir:
+    description: Fallback build directory when the config does not define one.
+    required: false
+    default: build
+
+outputs:
+  dir:
+    value: ${{ steps.resolve.outputs.dir }}
+
+runs:
+  using: composite
+  steps:
+    - id: resolve
+      shell: bash
+      run: |
+        node <<'NODE' >> "$GITHUB_OUTPUT"
+        const fs = require('fs');
+        const path = require('path');
+
+        const configPath = path.resolve(process.cwd(), '${{ inputs.config_path }}');
+        const defaultDir = '${{ inputs.default_dir }}';
+
+        if (!fs.existsSync(configPath)) {
+          console.log(`dir=${defaultDir}`);
+          process.exit(0);
+        }
+
+        const text = fs.readFileSync(configPath, 'utf8');
+        const match = text.match(/export\s+const\s+buildDir\s*=\s*['\"]([^'\"]+)['\"]/);
+        console.log(`dir=${match && match[1] ? match[1] : defaultDir}`);
+        NODE
+
+

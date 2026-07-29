@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "types": ["node", "@playwright/test"],
+    "strict": true,
+    "useDefineForClassFields": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "paths": {
+      "@config/*": ["./config/*"],
+      "@data/*": ["./data/*"],
+      "@fixtures/*": ["./fixtures/*"],
+      "@pom/*": ["./pom/*"],
+      "@root/*": ["./*"],
+      "@utils/*": ["./utils/*"],
+      "@scripts/*": ["./scripts/*"]
+    }
+  },
+  "include": ["**/*.ts"],
+  // "build" must match buildDir in playwright.config.ts — update both if renamed
+  "exclude": ["node_modules", "build"]
+}

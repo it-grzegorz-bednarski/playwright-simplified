@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-06-15T08:35:30.312Z",
+  "results": [
+    {
+      "url": "http://the-internet.herokuapp.com/",
+      "errors": 1,
+      "messages": ["Failed to load resource: net::ERR_NAME_NOT_RESOLVED"]
+    },
+    {
+      "url": "http://the-internet.herokuapp.com/floating_menu",
+      "errors": 1,
+      "messages": ["Failed to load resource: net::ERR_NAME_NOT_RESOLVED"]
+    },
+    {
+      "url": "http://the-internet.herokuapp.com/large",
+      "errors": 1,
+      "messages": ["Failed to load resource: net::ERR_NAME_NOT_RESOLVED"]
+    },
+    {
+      "url": "https://www.iana.org/domains/reserved",
+      "errors": 0
+    }
+  ],
+  "summary": {
+    "pages": 4,
+    "pagesWithErrors": 3,
+    "totalErrors": 3
+  }
+}

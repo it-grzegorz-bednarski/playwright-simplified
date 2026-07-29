@@ -1,0 +1,79 @@
+name: Playwright Send Reports
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Environment name used in report messages.
+        required: true
+        type: string
+      artifact_name:
+        description: Name of the artifact containing merged reports.
+        required: true
+        type: string
+      ci_run_url:
+        description: URL to the originating GitHub Actions run.
+        required: true
+        type: string
+      download_path:
+        description: Directory where the artifact should be downloaded.
+        required: false
+        type: string
+        default: report-artifacts
+
+jobs:
+  send-reports:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      CI_RUN_URL: ${{ inputs.ci_run_url }}
+      PLAYWRIGHT_REPORT_URL: ${{ inputs.ci_run_url }}
+    steps:
+      - name: Download report artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.download_path }}
+
+      - name: Locate merged reports
+        run: |
+          set -euo pipefail
+          JSON_REPORT=$(find "${{ inputs.download_path }}" -type f -path '*/json/results.json' | sort | head -n 1 || true)
+          HTML_REPORT=$(find "${{ inputs.download_path }}" -type f -path '*/html-report/index.html' | sort | head -n 1 || true)
+
+          echo "JSON_REPORT=$JSON_REPORT" >> "$GITHUB_ENV"
+          echo "HTML_REPORT=$HTML_REPORT" >> "$GITHUB_ENV"
+
+          if [ -z "$JSON_REPORT" ]; then
+            echo '::warning::Merged JSON report was not found in downloaded artifacts.'
+          fi
+
+      - name: Parse and log test results
+        env:
+          ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          if [ -n "${JSON_REPORT:-}" ] && [ -f "$JSON_REPORT" ]; then
+            echo "::notice title=Playwright Test Report (${{ inputs.environment }})::Run: $CI_RUN_URL"
+            node -e "
+              const fs = require('fs');
+              const report = JSON.parse(fs.readFileSync(process.env.JSON_REPORT, 'utf8'));
+              const stats = report.stats || {};
+              console.log('✅ Passed:', stats.expected || 0);
+              console.log('❌ Failed:', stats.unexpected || 0);
+              console.log('⚠️  Flaky:', stats.flaky || 0);
+              console.log('⏭️  Skipped:', stats.skipped || 0);
+            "
+          else
+            echo "::warning::JSON report not found"
+          fi
+
+      - name: Check for HTML report availability
+        run: |
+          if [ -n "${HTML_REPORT:-}" ] && [ -f "$HTML_REPORT" ]; then
+            echo "✅ HTML report is available"
+          else
+            echo "⚠️ HTML report not found"
+          fi
+

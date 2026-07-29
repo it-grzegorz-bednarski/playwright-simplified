@@ -1,0 +1,16 @@
+{
+  "event": "page loaded",
+  "web": {
+    "webPageDetails": {
+      "domain": "experienceleague.adobe.com",
+      "pageType": "webpage",
+      "siteSection": "docs",
+      "solution": "analytics"
+    }
+  },
+  "user": {
+    "userDetails": {
+      "userAuthenticatedSystem": "ims"
+    }
+  }
+}

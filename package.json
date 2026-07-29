@@ -1,0 +1,51 @@
+{
+  "name": "playwright-simplified",
+  "author": "IT Grzegorz Bednarski <it.grzegorz.bednarski@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24.18.0 <25"
+  },
+  "packageManager": "yarn@4.12.0",
+  "scripts": {
+    "test": "node scripts/run.cjs",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@percy/cli": "^1.32.5",
+    "@percy/playwright": "^1.1.1",
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "axe-core": "^4.12.1",
+    "chrome-launcher": "^1.2.1",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-no-only-tests": "^3.4.0",
+    "eslint-plugin-playwright": "^2.11.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "html-validate": "^11.6.1",
+    "husky": "^9.1.7",
+    "lighthouse": "^13.4.1",
+    "linkinator": "^8.0.3",
+    "lint-staged": "^17.3.0",
+    "md-to-pdf": "^5.2.5",
+    "playwright": "^1.62.1",
+    "playwright-slack-report": "^1.1.112",
+    "playwright-teams-reporter": "^1.0.1",
+    "prettier": "^3.9.6",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^6.0.3"
+  },
+  "lint-staged": {
+    "**/*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
