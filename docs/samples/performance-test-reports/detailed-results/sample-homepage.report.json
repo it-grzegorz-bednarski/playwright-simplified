@@ -1,0 +1,15 @@
+{
+  "requestedUrl": "https://www.example.com/",
+  "finalUrl": "https://www.example.com/",
+  "fetchTime": "2026-06-15T12:00:00.000Z",
+  "categories": {
+    "performance": { "score": 0.58 },
+    "accessibility": { "score": 0.95 },
+    "best-practices": { "score": 0.76 },
+    "seo": { "score": 0.91 }
+  },
+  "configSettings": {
+    "onlyCategories": ["performance", "accessibility", "best-practices", "seo"],
+    "formFactor": "desktop"
+  }
+}

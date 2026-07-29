@@ -1,0 +1,123 @@
+name: Setup Playwright CI
+description: Prepare Node, Yarn, caches, dependencies, and browsers for Playwright jobs.
+
+inputs:
+  env_file_content:
+    description: Repository secret content used to create the env file.
+    required: true
+  target_env:
+    description: Target environment name used in the env file name.
+    required: true
+  env_file_dir:
+    description: Directory where the env file should be written.
+    required: false
+    default: env
+  nvmrc_file:
+    description: Path to the Node version file.
+    required: false
+    default: .nvmrc
+  browsers_path:
+    description: Playwright browsers cache directory.
+    required: false
+    default: /home/runner/.cache/ms-playwright
+  package_json_file:
+    description: Path to package.json.
+    required: false
+    default: package.json
+  yarn_lock_file:
+    description: Path to yarn.lock.
+    required: false
+    default: yarn.lock
+  playwright_install_command:
+    description: Command used to install Playwright browsers.
+    required: false
+    default: corepack yarn playwright install
+
+outputs:
+  yarn-version:
+    value: ${{ steps.yarn-version.outputs.version }}
+  yarn-cache-dir:
+    value: ${{ steps.yarn-cache-dir.outputs.dir }}
+  playwright-version:
+    value: ${{ steps.playwright-version.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create env file from repository secret
+      shell: bash
+      env:
+        ENV_FILE_CONTENT: ${{ inputs.env_file_content }}
+        TARGET_ENV: ${{ inputs.target_env }}
+        ENV_FILE_DIR: ${{ inputs.env_file_dir }}
+      run: |
+        set -euo pipefail
+        if [ -z "${ENV_FILE_CONTENT}" ]; then
+          echo "::error::Repository secret content is empty or missing."
+          exit 1
+        fi
+
+        mkdir -p "${ENV_FILE_DIR}"
+        target_file="${ENV_FILE_DIR}/.env.${TARGET_ENV}"
+        printf "%s\n" "${ENV_FILE_CONTENT}" > "${target_file}"
+        echo "Created ${target_file}"
+
+    - name: Setup Node.js from .nvmrc
+      uses: actions/setup-node@v7
+      with:
+        node-version-file: ${{ inputs.nvmrc_file }}
+
+    - name: Extract Yarn version from package.json
+      id: yarn-version
+      shell: bash
+      run: |
+        YARN_VERSION=$(node -e "const pkg = require('./${{ inputs.package_json_file }}'); const m = pkg.packageManager && pkg.packageManager.match(/yarn@([0-9.]+)/); process.stdout.write(m ? m[1] : '4.12.0');")
+        echo "version=$YARN_VERSION" >> "$GITHUB_OUTPUT"
+        echo "Using Yarn version: $YARN_VERSION"
+
+    - name: Enable Corepack and install Yarn
+      shell: bash
+      run: |
+        corepack enable
+        corepack prepare "yarn@${{ steps.yarn-version.outputs.version }}" --activate
+        corepack yarn --version
+
+    - name: Resolve Yarn cache directory
+      id: yarn-cache-dir
+      shell: bash
+      run: |
+        YARN_CACHE_DIR=$(corepack yarn config get cacheFolder)
+        echo "dir=$YARN_CACHE_DIR" >> "$GITHUB_OUTPUT"
+        echo "Using Yarn cache directory: $YARN_CACHE_DIR"
+
+    - name: Restore Yarn cache
+      uses: actions/cache@v6
+      with:
+        path: ${{ steps.yarn-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles(inputs.nvmrc_file) }}-yarn-${{ steps.yarn-version.outputs.version }}-${{ hashFiles(inputs.yarn_lock_file) }}
+
+    - name: Resolve Playwright version
+      id: playwright-version
+      shell: bash
+      run: |
+        PLAYWRIGHT_VERSION=$(node -e "const pkg = require('./${{ inputs.package_json_file }}'); process.stdout.write((pkg.devDependencies && (pkg.devDependencies['playwright'] || pkg.devDependencies['@playwright/test'])) || 'unknown');")
+        echo "version=$PLAYWRIGHT_VERSION" >> "$GITHUB_OUTPUT"
+        echo "Using Playwright version key: $PLAYWRIGHT_VERSION"
+
+    - name: Restore Playwright browsers
+      uses: actions/cache@v6
+      with:
+        path: ${{ inputs.browsers_path }}
+        key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}-${{ hashFiles(inputs.yarn_lock_file) }}
+
+    - name: Install dependencies
+      shell: bash
+      run: corepack yarn install --immutable
+
+    - name: Install Playwright browsers
+      shell: bash
+      run: ${{ inputs.playwright_install_command }}
+
+
+
+
