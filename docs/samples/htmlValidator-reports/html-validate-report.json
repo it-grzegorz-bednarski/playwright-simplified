@@ -1,0 +1,399 @@
+{
+  "timestamp": "2026-02-15T15:34:51.393Z",
+  "results": [
+    {
+      "url": "https://the-internet.herokuapp.com/",
+      "errors": 1,
+      "warnings": 0,
+      "total": 1,
+      "issues": [
+        {
+          "severity": "error",
+          "ruleId": "element-permitted-content",
+          "message": "<style> element is not permitted as content under <div>",
+          "line": 31,
+          "column": 10
+        }
+      ]
+    },
+    {
+      "url": "https://the-internet.herokuapp.com/floating_menu",
+      "errors": 1,
+      "warnings": 0,
+      "total": 1,
+      "issues": [
+        {
+          "severity": "error",
+          "ruleId": "element-permitted-content",
+          "message": "<style> element is not permitted as content under <div>",
+          "line": 31,
+          "column": 10
+        }
+      ]
+    },
+    {
+      "url": "https://the-internet.herokuapp.com/large",
+      "errors": 150,
+      "warnings": 0,
+      "total": 150,
+      "issues": [
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-1.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 351,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-1.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 356,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-1.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 361,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-2.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 368,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-2.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 373,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-2.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 378,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-3.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 385,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-3.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 390,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-3.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 395,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-4.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 402,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-4.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 407,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-4.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 412,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-5.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 419,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-5.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 424,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-5.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 429,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-6.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 436,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-6.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 441,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-6.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 446,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-7.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 453,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-7.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 458,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-7.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 463,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-8.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 470,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-8.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 475,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-8.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 480,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-9.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 487,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-9.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 492,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-9.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 497,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-10.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 504,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-10.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 509,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-10.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 514,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-11.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 521,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-11.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 526,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-11.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 531,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-12.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 538,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-12.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 543,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-12.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 548,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-13.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 555,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-13.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 560,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-13.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 565,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-14.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 572,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-14.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 577,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-14.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 582,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-15.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 589,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-15.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 594,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-15.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 599,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-16.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 606,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-16.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 611,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-16.3\" must only contain letters, digits, dash and underscore characters",
+          "line": 616,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-17.1\" must only contain letters, digits, dash and underscore characters",
+          "line": 623,
+          "column": 26
+        },
+        {
+          "severity": "error",
+          "ruleId": "valid-id",
+          "message": "element id \"sibling-17.2\" must only contain letters, digits, dash and underscore characters",
+          "line": 628,
+          "column": 26
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "pages": 3,
+    "pagesWithErrors": 3,
+    "totalErrors": 152,
+    "totalWarnings": 0
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "startedAt": "2026-06-15T16:00:00.000Z",
+  "finishedAt": "2026-06-15T16:10:34.000Z",
+  "env": "dev",
+  "allPassed": false,
+  "results": [
+    {
+      "name": "homePage",
+      "url": "https://www.example.com/",
+      "device": "desktop",
+      "categories": [
+        { "category": "accessibility", "score": 95.0, "threshold": 80, "passed": true },
+        { "category": "bestPractices", "score": 59.0, "threshold": 70, "passed": false },
+        { "category": "performance", "score": 45.0, "threshold": 40, "passed": true },
+        { "category": "seo", "score": 100.0, "threshold": 90, "passed": true }
+      ],
+      "allPassed": false
+    },
+    {
+      "name": "homePage",
+      "url": "https://www.example.com/",
+      "device": "mobile",
+      "categories": [
+        { "category": "accessibility", "score": 95.0, "threshold": 80, "passed": true },
+        { "category": "bestPractices", "score": 57.0, "threshold": 70, "passed": false },
+        { "category": "performance", "score": 35.0, "threshold": 40, "passed": false },
+        { "category": "seo", "score": 100.0, "threshold": 90, "passed": true }
+      ],
+      "allPassed": false
+    },
+    {
+      "name": "largePage",
+      "url": "https://www.example.com/large",
+      "device": "desktop",
+      "categories": [
+        { "category": "accessibility", "score": 92.0, "threshold": 80, "passed": true },
+        { "category": "bestPractices", "score": 76.0, "threshold": 70, "passed": true },
+        { "category": "performance", "score": 57.0, "threshold": 40, "passed": true },
+        { "category": "seo", "score": 91.0, "threshold": 90, "passed": true }
+      ],
+      "allPassed": true
+    },
+    {
+      "name": "largePage",
+      "url": "https://www.example.com/large",
+      "device": "mobile",
+      "categories": [
+        { "category": "accessibility", "score": 92.0, "threshold": 80, "passed": true },
+        { "category": "bestPractices", "score": 74.0, "threshold": 70, "passed": true },
+        { "category": "performance", "score": 41.0, "threshold": 40, "passed": true },
+        { "category": "seo", "score": 91.0, "threshold": 90, "passed": true }
+      ],
+      "allPassed": true
+    }
+  ],
+  "configSnapshot": {
+    "hideSensitiveDataInReport": true,
+    "devices": ["desktop", "mobile"],
+    "onlyCategories": ["performance", "accessibility", "bestPractices", "seo"],
+    "thresholds": {
+      "performance": 40,
+      "accessibility": 80,
+      "bestPractices": 70,
+      "seo": 90,
+      "pwa": 50
+    }
+  }
+}
