@@ -1,0 +1,19 @@
+version: 2
+snapshot:
+  widths:
+    - 375
+    - 768
+    - 1024
+    - 1440
+  percy-css: |
+    /* Hide dynamic elements that can change between runs */
+    .ad-banner,
+    #chat-widget,
+    .timestamp {
+      display: none !important;
+      visibility: hidden !important;
+    }
+discovery:
+  disable-cache: true
+  network-idle-timeout: 250
+
