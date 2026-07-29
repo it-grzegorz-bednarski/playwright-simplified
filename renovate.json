@@ -1,0 +1,73 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":dependencyDashboard"],
+  "timezone": "Europe/Warsaw",
+  "schedule": ["on saturday"],
+  "labels": ["dependencies", "renovate"],
+  "ignoreDeps": ["node", "yarn"],
+  "packageRules": [
+    {
+      "description": "Automerge all patch updates.",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "description": "Keep all minor updates manual.",
+      "matchUpdateTypes": ["minor"],
+      "automerge": false
+    },
+    {
+      "description": "Group code quality tools in one PR.",
+      "groupName": "code quality",
+      "matchPackageNames": [
+        "@eslint/js",
+        "@types/node",
+        "@typescript-eslint/eslint-plugin",
+        "@typescript-eslint/parser",
+        "eslint",
+        "eslint-config-prettier",
+        "eslint-import-resolver-typescript",
+        "eslint-plugin-import-x",
+        "eslint-plugin-no-only-tests",
+        "eslint-plugin-playwright",
+        "eslint-plugin-prettier",
+        "eslint-plugin-unused-imports",
+        "husky",
+        "lint-staged",
+        "prettier",
+        "typescript"
+      ]
+    },
+    {
+      "description": "Group Playwright core packages.",
+      "groupName": "playwright core",
+      "matchPackageNames": [
+        "@playwright/test",
+        "playwright"
+      ]
+    },
+    {
+      "description": "Keep all major updates manual and flag them for extra care.",
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["dependencies-major-review"],
+      "commitMessageAction": "review",
+      "commitMessageTopic": "major dependency updates",
+      "commitMessageExtra": "(additional testing recommended)",
+      "automerge": false
+    },
+    {
+      "description": "Lock TypeScript to version 6.x",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "^6.0.0",
+      "rangeStrategy": "bump"
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["on sunday"],
+    "commitMessageTopic": "lockfile maintenance"
+  },
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0
+}
