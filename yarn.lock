@@ -3192,8 +3192,8 @@ __metadata:
   linkType: hard
 
 "html-validate@npm:^11.18.0":
-  version: 11.18.0
-  resolution: "html-validate@npm:11.18.0"
+  version: 11.21.0
+  resolution: "html-validate@npm:11.21.0"
   dependencies:
     "@html-validate/stylish": "npm:^6.0.0"
     "@sidvind/better-ajv-errors": "npm:7.0.0"
@@ -3220,7 +3220,7 @@ __metadata:
       optional: true
   bin:
     html-validate: bin/html-validate.mjs
-  checksum: 10c0/02486ca3f92798013fbfa2a43c24e18a3d73c7c92f21a83b76ce41f84d1a749c49e945aa1fe63b6ca613772930bad85f3e6f91da1f58bbdf6ccf261a65d1b07d
+  checksum: 10c0/f5487c2ff6e42e4326820a174a318b931bc8c6e1be71a85c53d0717e6d10f2c63dd6a3c824d88d2a7558fc30caf0da20057870df262e5af491f6385f4ed25dbe
   languageName: node
   linkType: hard
 
